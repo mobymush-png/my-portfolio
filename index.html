@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moreblessing Musekiwa | Portfolio</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/css/bootstrap.min.css">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap">
+    
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.75);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --accent-purple: #9d4edd;
+            --accent-pink: #f72585;
+            --accent-blue: #4cc9f0;
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas background for floating particles */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Fixed Modern Glass Navbar */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 16px 30px;
+            z-index: 9999;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand-custom {
+            font-weight: 800;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #f72585, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-link-custom {
+            color: #c9d1d9 !important;
+            margin: 0 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            position: relative;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-custom:hover,
+        .nav-link-custom.active {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Section Styling */
+        section {
+            min-height: 100vh;
+            padding-top: 110px;
+            padding-bottom: 70px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #ffffff, var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(157, 78, 221, 0.4);
+            transform: translateY(-4px);
+        }
+
+        /* Hero Styling */
+        .greeting-badge {
+            display: inline-block;
+            background: rgba(247, 37, 133, 0.15);
+            color: var(--accent-pink);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 1px solid rgba(247, 37, 133, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #4cc9f0, #9d4edd, #f72585);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-img {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid rgba(157, 78, 221, 0.5);
+            box-shadow: 0 0 35px rgba(157, 78, 221, 0.4);
+        }
+
+        /* External links */
+        a.external-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--accent-blue);
+            transition: all 0.2s ease;
+        }
+
+        a.external-link:hover {
+            color: var(--accent-pink);
+            border-bottom-color: var(--accent-pink);
+        }
+
+        /* Experience Timeline */
+        .experience-card {
+            position: relative;
+            padding-left: 24px;
+            border-left: 3px solid var(--accent-purple);
+            margin-bottom: 25px;
+        }
+
+        .experience-card .date-tag {
+            color: var(--accent-pink);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Hobby Pill */
+        .hobby-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .hobby-box:hover {
+            background: rgba(157, 78, 221, 0.15);
+            border-color: rgba(157, 78, 221, 0.5);
+            transform: scale(1.02);
+        }
+
+        .hobby-icon {
+            font-size: 1.8rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--accent-blue);
+        }
+
+        /* Contact Items */
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #9d4edd, #f72585);
+            color: #ffffff;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.3);
+        }
+
+        .contact-btn:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(247, 37, 133, 0.5);
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-right: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link:hover {
+            background: var(--accent-purple);
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-img {
+                width: 220px;
+                height: 220px;
+            }
+            section {
+                padding-top: 100px;
+                padding-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Smooth floating particle canvas background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="#home">Moreblessing M.</a>
+            <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars fs-4 text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="navbar-nav align-items-center mt-3 mt-lg-0">
+                    <a href="#home" class="nav-link-custom">Home</a>   
+                    <a href="#about" class="nav-link-custom">About</a>
+                    <a href="#work" class="nav-link-custom">Experience</a>
+                    <a href="#hobbies" class="nav-link-custom">Hobbies</a>
+                    <a href="#contact" class="nav-link-custom">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- Hero Section -->
+        <section id="home">
+            <div class="row align-items-center w-100 gy-4">
+                <div class="col-lg-7">
+                    <span class="greeting-badge"><i class="fa-solid fa-hand-wave me-1"></i> Welcome to my space</span>
+                    <h1 class="hero-title mb-3">Hello there, I am <br><span>Moreblessing Musekiwa</span></h1>
+                    <p class="fs-5 text-muted mb-4" style="max-width: 580px;">
+                        A passionate Computer Science Teacher & Educator shaping young minds in technology and computing.
+                    </p>
+                    <div class="d-flex gap-3 align-items-center flex-wrap">
+                        <a href="#contact" class="contact-btn">
+                            <i class="fa-solid fa-paper-plane"></i> Get In Touch
+                        </a>
+                        <a href="#about" class="btn btn-outline-light rounded-3 px-4 py-2 font-weight-bold" style="border-radius: 12px !important; border-color: rgba(255,255,255,0.2);">
+                            Explore Portfolio
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center">
+                    <div class="position-relative d-inline-block">
+                        <img src="moby.jpeg" alt="Moreblessing Musekiwa" class="hero-img" onerror="this.onerror=null; this.src='https://placehold.co/300x300/161b22/9d4edd?text=Moreblessing';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section (Info on LEFT, Picture on RIGHT) -->
+        <section id="about">
+            <div class="w-100">
+                <h2 class="section-title">About Me</h2>
+                <div class="glass-card">
+                    <div class="row align-items-center gy-4">
+                        <!-- Information on LEFT side -->
+                        <div class="col-lg-7">
+                            <p class="fs-5 leading-relaxed">
+                                Hello! My name is <strong>Moreblessing Musekiwa</strong>. I am an enthusiastic educator dedicated to making Computer Science engaging, accessible, and practical for high school students.
+                            </p>
+                            <p class="fs-5 leading-relaxed">
+                                I currently work as a high school teacher at 
+                                <a href="https://www.andersonadventist.ac.zw" target="_blank" class="external-link">Anderson Adventist High School</a>, 
+                                where I teach Cambridge O Level Computer Science (Forms 1 to 4).
+                            </p>
+                            <p class="fs-5 leading-relaxed mb-0">
+                                To continuously grow in my field, I am furthering my education in Computer Science at 
+                                <a href="https://www.msu.ac.zw" target="_blank" class="external-link">Midlands State University</a>. 
+                                My goal is to qualify for teaching Cambridge AS and A Level Computer Science and inspire the next generation of software creators and tech innovators.
+                            </p>
+                        </div>
+                        <!-- Picture on RIGHT side -->
+                        <div class="col-lg-5 text-center">
+                            <img src="Moby1.jpeg" alt="Moreblessing teaching" class="img-fluid rounded-4 shadow-lg border border-secondary" style="max-width: 320px; height: auto; border-color: rgba(255,255,255,0.15) !important;" onerror="this.onerror=null; this.src='https://placehold.co/320x400/161b22/4cc9f0?text=Moreblessing+M.';">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Places I Have Worked / Experience Section -->
+        <section id="work">
+            <div class="w-100">
+                <h2 class="section-title">Places I Have Worked</h2>
+                <div class="row gy-4">
+                    <div class="col-md-6">
+                        <div class="glass-card h-100">
+                            <div class="experience-card">
+                                <span class="date-tag"><i class="fa-regular fa-calendar me-1"></i> 2022 - Present</span>
+                                <h3 class="fs-4 text-white mt-2 font-weight-bold">Computer Science Teacher</h3>
+                                <h5 class="fs-6 text-muted mb-3">
+                                    <a href="https://www.andersonadventist.ac.zw" target="_blank" class="external-link">Anderson Adventist High School</a>
+                                </h5>
+                                <p class="text-muted mb-0">
+                                    Teaching Cambridge O Level Computer Science to students from Form 1 through Form 4. Designing curriculum, conducting practical lab sessions, and preparing students for international Cambridge examinations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="glass-card h-100">
+                            <div class="experience-card" style="border-left-color: var(--accent-pink);">
+                                <span class="date-tag" style="color: var(--accent-blue);"><i class="fa-regular fa-calendar me-1"></i> Jan 2013 - Dec 2014</span>
+                                <h3 class="fs-4 text-white mt-2 font-weight-bold">IT Attachment / Intern</h3>
+                                <h5 class="fs-6 text-muted mb-3">
+                                    <a href="https://www.zpc.co.zw" target="_blank" class="external-link">ZPC Hwange</a>
+                                </h5>
+                                <p class="text-muted mb-0">
+                                    Worked for two years on industrial attachment gaining practical hands-on experience in IT infrastructure, troubleshooting hardware and systems, network support, and operational workflows.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="glass-card">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hobby-icon" style="color: var(--accent-pink);">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <div>
+                                    <h4 class="fs-5 text-white mb-1">Education Diploma</h4>
+                                    <p class="text-muted mb-0">
+                                        Completed Diploma in Education at <a href="https://www.gwerupoly.ac.zw" target="_blank" class="external-link">Gweru Polytech College</a> prior to starting full-time teaching in 2022.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hobbies Section -->
+        <section id="hobbies">
+            <div class="w-100">
+                <h2 class="section-title">My Hobbies</h2>
+                <div class="glass-card">
+                    <p class="fs-5 text-muted mb-4">When I am not teaching or studying, I love spending my time doing these activities:</p>
+                    <div class="row g-3">
+                        <div class="col-md-6 col-lg-3">
+                            <div class="hobby-box">
+                                <div class="hobby-icon">
+                                    <i class="fa-solid fa-utensils"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fs-6 text-white mb-0">Cooking</h5>
+                                    <small class="text-muted">Exploring recipes</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="hobby-box">
+                                <div class="hobby-icon" style="color: var(--accent-pink);">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fs-6 text-white mb-0">Reading Books</h5>
+                                    <small class="text-muted">Learning new ideas</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="hobby-box">
+                                <div class="hobby-icon" style="color: var(--accent-purple);">
+                                    <i class="fa-solid fa-film"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fs-6 text-white mb-0">Movies & Series</h5>
+                                    <small class="text-muted">Relaxing on Netflix</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="hobby-box">
+                                <div class="hobby-icon" style="color: #52b788;">
+                                    <i class="fa-solid fa-plane"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fs-6 text-white mb-0">Travelling</h5>
+                                    <small class="text-muted">Discovering places</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="w-100">
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="glass-card">
+                    <div class="row align-items-center gy-4">
+                        <div class="col-lg-7">
+                            <h3 class="fs-3 font-weight-bold mb-3">Let's Connect & Collaborate</h3>
+                            <p class="fs-5 text-muted mb-4">
+                                Whether you have questions regarding Cambridge Computer Science studies, educational technology, or potential professional opportunities, feel free to drop a line!
+                            </p>
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div class="hobby-icon" style="color: var(--accent-pink);">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <span class="text-muted d-block fs-6">Direct Email</span>
+                                    <a href="mailto:mobymush@gmail.com" class="fs-5 text-white font-weight-bold text-decoration-none" style="color: #00f0ff !important;">mobymush@gmail.com</a>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-muted mb-2">Connect on social media:</p>
+                                <a href="https://www.linkedin.com/in/moby-mush-6a4276118/" class="social-link" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                                <a href="https://x.com/MobyMush" class="social-link" title="Twitter/X"><i class="fa-brands fa-twitter"></i></a>
+                                <a href="https://github.com/mobymush-png" class="social-link" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                                <a href="https://www.facebook.com/moreblesing.musekiwa.7" class="social-link" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <form onsubmit="event.preventDefault(); alert('Thank you! Message form submitted successfully.');" class="p-3">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small">Your Name</label>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" placeholder="John Doe" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small">Your Email</label>
+                                    <input type="email" class="form-control bg-dark text-white border-secondary rounded-3" placeholder="john@example.com" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small">Message</label>
+                                    <textarea class="form-control bg-dark text-white border-secondary rounded-3" rows="4" placeholder="Hi Moreblessing..." required></textarea>
+                                </div>
+                                <button type="submit" class="contact-btn w-100 justify-content-center">
+                                    Send Message <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 border-top border-secondary text-muted" style="background: rgba(13, 17, 23, 0.9);">
+        <p class="mb-0 small">&copy; <span id="year"></span> Moreblessing Musekiwa. Built with Bootstrap & JavaScript.</p>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Smooth floating particle canvas background script -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Canvas animation setup
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        const particleCount = 45;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class FloatingParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.radius = Math.random() * 25 + 5; // size of glowing shapes
+                this.vx = (Math.random() - 0.5) * 0.6; // gentle speed x
+                this.vy = (Math.random() - 0.5) * 0.6; // gentle speed y
+                this.alpha = Math.random() * 0.35 + 0.1; // soft opacity
+                
+                const colors = [
+                    'rgba(157, 78, 221, ',  // Purple
+                    'rgba(247, 37, 133, ',  // Pink
+                    'rgba(76, 201, 240, '   // Cyan
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.pulseSpeed = Math.random() * 0.01 + 0.005;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce at canvas borders smoothly
+                if (this.x < -20 || this.x > canvas.width + 20) this.vx *= -1;
+                if (this.y < -20 || this.y > canvas.height + 20) this.vy *= -1;
+
+                // Pulsate opacity slightly
+                this.alpha += Math.sin(Date.now() * this.pulseSpeed) * 0.002;
+                if (this.alpha < 0.08) this.alpha = 0.08;
+                if (this.alpha > 0.45) this.alpha = 0.45;
+            }
+
+            draw() {
+                ctx.beginPath();
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius
+                );
+                gradient.addColorStop(0, this.color + this.alpha + ')');
+                gradient.addColorStop(1, this.color + '0)');
+
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new FloatingParticle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = function() {
+            initParticles();
+            animate();
+        };
+
+        // Active link highlight on scroll
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-link-custom");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === "#" + current) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
